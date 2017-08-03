@@ -3,7 +3,12 @@
 | Distributed under the terms of the Modified BSD License.
 |----------------------------------------------------------------------------*/
 
-.jp-graphviz {
+.jp-bpmn {
     margin: 10px;
     overflow-y: auto;
+    height: 100%;
+}
+
+.jp-bpmn-content {
+    height: 100%;
 }

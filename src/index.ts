@@ -15,16 +15,18 @@ import {
 import * as Bpmn from "bpmn-js";
 
 //TODO: fix the tsc path error
-//import "../style/index.css";
+import "../style/index.css";
 
 // cf https://www.iana.org/assignments/media-types/text/vnd.graphviz
-const TYPES: {[key: string]: {name: string, extensions: string[], engine: any}} = {
+const TYPES: {[key: string]: {name: string, extensions: string[]}} = {
   'application/bpmn+xml': {
     name: 'bpmn',
-    extensions: ['.bpmn'],
-    engine: 'dot'
+    extensions: ['.bpmn']
   }
 };
+
+// Allow some console.log and window kludge
+const DEBUG: boolean = false;
 
 /**
  * A widget for rendering data, for usage with rendermime.
@@ -37,40 +39,54 @@ class RenderedData extends Widget implements IRenderMime.IRenderer {
   constructor(options: IRenderMime.IRendererOptions) {
     super();
     this._mimeType = options.mimeType;
-    this._engine = TYPES[this._mimeType].engine;
     this.addClass('jp-bpmn');
     this.div = document.createElement('div');
+    this.div.classList.add('jp-bpmn-content');
 
-    //this.viz = Viz(`digraph { "loading ..."; }`);
-    //this.div.innerHTML = this.viz;
-    this.div.innerHTML = '<h2>Waiting for bpmn content ...</h2>';
-    //console.log(this.viz);
-
+    if (DEBUG) {
+      console.log('jupyterlab_bpmn debug mode is on (build 77)');
+      this.div.innerHTML = '<h2>Waiting for bpmn content ...</h2>';
+      (<any>window).mydiv = this.div;
+    }
 
     this.node.appendChild(this.div);
-    (<any>window).mydiv22 = this.div;
 
-    this.bpmn = new Bpmn();
-    (<any>window).Bpmn = this.bpmn;
-    //this.bpmn.attachTo('.jp-bpmn');
-    console.log(this.bpmn);
-    console.log('dbg 58');
   }
 
   /**
    * Render into this widget's node.
    */
   renderModel(model: IRenderMime.IMimeModel): Promise<void> {
+    // Clear previous content
+    this.div.innerHTML = "";
+    // Instanciate and link to the bpmn-js component
+    this.bpmn = new Bpmn();
+    this.bpmn.attachTo(this.div);
     let data = model.data[this._mimeType];
-    this.div.innerHTML = '<h2>Bpmn content arrived !</h2>';
-    console.log(data);
+    if (DEBUG) {
+      (<any>window).Bpmn = this.bpmn;
+      console.log(this.bpmn);
+      (<any>window).mydata = data;
+      //console.log(data);
+    }
+
+    // ask bpmn-js to render the XML data
+    this.bpmn.importXML(data, function(err: any) {
+      if (err) {
+        console.log('error rendering', err);
+      } else {
+        if (DEBUG) {
+          console.log('bpmn content rendered');
+        }
+      }
+    });
+
     return Promise.resolve();
   }
 
   bpmn: any;
   div: any;
   private _mimeType: string;
-  private _engine: any;
 }
 
 /**

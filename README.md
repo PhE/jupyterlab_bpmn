@@ -1,11 +1,18 @@
-# jupyterlab graphviz
+# jupyterlab BPMN
 
 A JupyterLab extension for viewing [BPMN](http://www.bpmn.org) data
 files. A file renderer for files with `.bpmn` extensions and a mime renderer for the
 `application/bpmn+xml` mimetype is included. This extension uses
 [bpmn.js](http://bpmn.io/toolkit/bpmn-js/).
 
-![Screenshot](hello.png)
+
+Here are some screenshots from (basic to more complex BPMN files)[https://github.com/bpmn-io/bpmn-io-chrome/tree/master/resources] :
+
+![Basic example](basic.png)
+
+![Simple example](simple.png)
+
+![Pizza collaboration example](pizza-collaboration.png)
 
 To use the file viewer, right-click on a `.bpmn` file and choose the `bpmn` viewer.
 
@@ -16,7 +23,7 @@ To use the file viewer, right-click on a `.bpmn` file and choose the `bpmn` view
 ## Installation
 
 ```bash
-jupyter labextension install jupyterlab_graphviz
+jupyter labextension install jupyterlab_bpmn
 ```
 
 ## Development
@@ -39,5 +46,6 @@ jupyter lab build
 
 * allow visual editing
 * add tests
+* remove left/top margins
 * allow zooming in/out
-* add the minimap
+* add a minimap
