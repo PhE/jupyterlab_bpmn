@@ -13,6 +13,8 @@ import {
 
 //import * as Viz from "viz.js";
 import * as Bpmn from "bpmn-js";
+import * as BpmnModeler from "bpmn-js/lib/Modeler";
+
 
 //TODO: fix the tsc path error
 import "../style/index.css";
@@ -20,13 +22,16 @@ import "../style/index.css";
 // cf https://www.iana.org/assignments/media-types/text/vnd.graphviz
 const TYPES: {[key: string]: {name: string, extensions: string[]}} = {
   'application/bpmn+xml': {
-    name: 'bpmn',
+    name: 'bpmn viewer',
     extensions: ['.bpmn']
   }
 };
 
 // Allow some console.log and window kludge
-const DEBUG: boolean = false;
+const DEBUG: boolean = true;
+
+// Use the bpmn modeler widget
+const USE_MODELER: boolean = false;
 
 /**
  * A widget for rendering data, for usage with rendermime.
@@ -44,7 +49,7 @@ class RenderedData extends Widget implements IRenderMime.IRenderer {
     this.div.classList.add('jp-bpmn-content');
 
     if (DEBUG) {
-      console.log('jupyterlab_bpmn debug mode is on (build 77)');
+      console.log('jupyterlab_bpmn debug mode is on (build 83)');
       this.div.innerHTML = '<h2>Waiting for bpmn content ...</h2>';
       (<any>window).mydiv = this.div;
     }
@@ -60,7 +65,11 @@ class RenderedData extends Widget implements IRenderMime.IRenderer {
     // Clear previous content
     this.div.innerHTML = "";
     // Instanciate and link to the bpmn-js component
-    this.bpmn = new Bpmn();
+    if (USE_MODELER) {
+      this.bpmn = new BpmnModeler();
+    } else {
+      this.bpmn = new Bpmn();
+    }
     this.bpmn.attachTo(this.div);
     let data = model.data[this._mimeType];
     if (DEBUG) {
