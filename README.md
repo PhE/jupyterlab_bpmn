@@ -6,7 +6,7 @@ files. A file renderer for files with `.bpmn` extensions and a mime renderer for
 [bpmn.js](http://bpmn.io/toolkit/bpmn-js/).
 
 
-Here are some screenshots from (basic to more complex BPMN files)[https://github.com/bpmn-io/bpmn-io-chrome/tree/master/resources] :
+Here are some screenshots from [basic to more complex BPMN files](https://github.com/bpmn-io/bpmn-io-chrome/tree/master/resources) :
 
 ![Basic example](basic.png)
 
